@@ -24,7 +24,7 @@ class LoginController: UIViewController {
     var passwordTextField: UITextField = UITextField()
     var nameTextFieldBorderLine: UIView = UIView()
     var emailTextFieldBorderLine: UIView = UIView()
-    var loginRegisterSegmentedControl: UISegmentedControl = UISegmentedControl(items: ["Register","Login"])
+    var loginRegisterSegmentedControl: UISegmentedControl = UISegmentedControl(items: ["Login","Register"])
     var profileImageView: UIImageView = UIImageView()
     var tapGesture: UITapGestureRecognizer?
     var imagePickerController: UIImagePickerController = UIImagePickerController()
@@ -80,9 +80,9 @@ class LoginController: UIViewController {
         view.addSubview(loginRegisterSegmentedControl)
         loginRegisterSegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         loginRegisterSegmentedControl.tintColor = UIColor.white
-        loginRegisterSegmentedControl.selectedSegmentIndex = 0
+        loginRegisterSegmentedControl.selectedSegmentIndex = 1
         
-        loginRegisterSegmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        loginRegisterSegmentedControl.addTarget(self, action: #selector(handleLoginRegisterChange(_:)), for: .valueChanged)
         
         loginRegisterSegmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginRegisterSegmentedControl.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -(viewPadding*2)).isActive = true
@@ -166,29 +166,17 @@ class LoginController: UIViewController {
         loginRegisterButton.layer.cornerRadius = 20
         loginRegisterButton.layer.borderWidth = 1.0
         loginRegisterButton.layer.borderColor = UIColor.white.cgColor
-        loginRegisterButton.setTitle("LOGIN", for: .normal)
+        loginRegisterButton.setTitle("REGISTER", for: .normal)
         loginRegisterButton.setTitleColor(.white, for: .normal)
         loginRegisterButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
+        loginRegisterButton.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
         loginRegisterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         loginRegisterButton.topAnchor.constraint(equalTo: inputsContainerView.bottomAnchor, constant: viewPadding).isActive = true
         loginRegisterButton.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor).isActive = true
         loginRegisterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
-    //MARK:- Actions
-    func segmentedControlValueChanged(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
-            nameTextFieldHeight?.constant = textFieldHeight
-            nameTextFieldBorderLineHeight?.constant = borderLineHeight
-            inputsContainerViewHeight?.constant = containerHeight
-
-        }else {
-            inputsContainerViewHeight?.constant = (inputsContainerViewHeight?.constant)! - ((nameTextFieldHeight?.constant)! + (nameTextFieldBorderLineHeight?.constant)!)
-            nameTextFieldHeight?.constant = 0.0
-            nameTextFieldBorderLineHeight?.constant = 0.0
-        }
-        view.layoutIfNeeded()
-    }
+   
 }
 
 extension UIColor {
