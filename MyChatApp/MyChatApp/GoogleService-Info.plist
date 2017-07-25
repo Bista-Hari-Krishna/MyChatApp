@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>138372230349-i6eeqvah86nhv90tp660n28t7jfev03a.apps.googleusercontent.com</string>
+	<string>1061292261430-to4k9sp3rk1gtu3ms5qrib3lpsjfipdc.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.138372230349-i6eeqvah86nhv90tp660n28t7jfev03a</string>
+	<string>com.googleusercontent.apps.1061292261430-to4k9sp3rk1gtu3ms5qrib3lpsjfipdc</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDlC4AmIFfXa_iqCq7RlgOVrQ9G4dFm99c</string>
+	<string>AIzaSyCzwONnudxbWz3_ePJEm-dlai-ienl42o0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>138372230349</string>
+	<string>1061292261430</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.dell.DellDistribution.MyChatApp</string>
 	<key>PROJECT_ID</key>
-	<string>mychatapp-f0878</string>
+	<string>mychatapp-f83a2</string>
 	<key>STORAGE_BUCKET</key>
-	<string>mychatapp-f0878.appspot.com</string>
+	<string>mychatapp-f83a2.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:138372230349:ios:5ede7c9196e00578</string>
+	<string>1:1061292261430:ios:5ede7c9196e00578</string>
 	<key>DATABASE_URL</key>
-	<string>https://mychatapp-f0878.firebaseio.com</string>
+	<string>https://mychatapp-f83a2.firebaseio.com</string>
 </dict>
 </plist>
