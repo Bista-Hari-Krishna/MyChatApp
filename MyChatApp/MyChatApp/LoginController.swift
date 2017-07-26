@@ -110,14 +110,12 @@ class LoginController: UIViewController {
         inputsContainerViewHeight?.isActive = true
     }
     func setupNameTextField() {
+        nameTextField = UITextField(borderStyle: .none, textColor: .white, placeholderText: "Name")
+        
         inputsContainerView.addSubview(nameTextField)
         inputsContainerView.addSubview(nameTextFieldBorderLine)
-
-        nameTextField.translatesAutoresizingMaskIntoConstraints = false
         nameTextField.clipsToBounds = true
-        nameTextField.textColor = .white
-        nameTextField.setAttributedPlaceholder(with: "Name")
-        nameTextField.borderStyle = .none
+      
         nameTextField.topAnchor.constraint(equalTo: inputsContainerView.topAnchor, constant: viewPadding).isActive = true
         nameTextField.centerXAnchor.constraint(equalTo: inputsContainerView.centerXAnchor).isActive = true
         nameTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, constant: -(containerPadding*2)).isActive = true
@@ -133,13 +131,10 @@ class LoginController: UIViewController {
         nameTextFieldBorderLineHeight?.isActive = true
     }
     func setupEmailTextField() {
+        emailTextField = UITextField(borderStyle: .none, textColor: .white, placeholderText: "Email")
         inputsContainerView.addSubview(emailTextField)
         inputsContainerView.addSubview(emailTextFieldBorderLine)
         
-        emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        emailTextField.textColor = .white
-        emailTextField.setAttributedPlaceholder(with: "Email")
-        emailTextField.borderStyle = .none
         emailTextField.topAnchor.constraint(equalTo: nameTextFieldBorderLine.bottomAnchor).isActive = true
         emailTextField.centerXAnchor.constraint(equalTo: inputsContainerView.centerXAnchor).isActive = true
         emailTextField.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, constant: -(containerPadding*2)).isActive = true
@@ -153,12 +148,9 @@ class LoginController: UIViewController {
         emailTextFieldBorderLine.widthAnchor.constraint(equalTo: inputsContainerView.widthAnchor, constant: -(containerPadding*2)).isActive = true
     }
     func setupPasswordTextField() {
+        passwordTextField = UITextField(borderStyle: .none, textColor: .white, placeholderText: "Password")
         inputsContainerView.addSubview(passwordTextField)
         
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        passwordTextField.textColor = .white
-        passwordTextField.setAttributedPlaceholder(with: "Password")
-        passwordTextField.borderStyle = .none
         passwordTextField.isSecureTextEntry = true
         passwordTextField.topAnchor.constraint(equalTo: emailTextFieldBorderLine.bottomAnchor).isActive = true
         passwordTextField.centerXAnchor.constraint(equalTo: inputsContainerView.centerXAnchor).isActive = true
@@ -166,14 +158,10 @@ class LoginController: UIViewController {
         passwordTextField.heightAnchor.constraint(equalToConstant: textFieldHeight).isActive = true
     }
     func setupLoginRegisterButton() {
+        loginRegisterButton = UIButton(title: "REGISTER", cornerRadius: 20)
         view.addSubview(loginRegisterButton)
         loginRegisterButton.translatesAutoresizingMaskIntoConstraints = false
-        loginRegisterButton.backgroundColor = .clear
-        loginRegisterButton.layer.cornerRadius = 20
-        loginRegisterButton.layer.borderWidth = 1.0
-        loginRegisterButton.layer.borderColor = UIColor.white.cgColor
-        loginRegisterButton.setTitle("REGISTER", for: .normal)
-        loginRegisterButton.setTitleColor(.white, for: .normal)
+        
         loginRegisterButton.titleLabel?.font = UIFont.systemFont(ofSize: 20)
         loginRegisterButton.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
@@ -191,9 +179,14 @@ extension UIColor {
     }
 }
 extension UITextField {
-    
-    func setAttributedPlaceholder(with placeholderText:String) {
-        let placeholder = NSAttributedString(string: placeholderText, attributes: [ NSForegroundColorAttributeName: UIColor.white.withAlphaComponent(0.6) ])
-        attributedPlaceholder = placeholder
+    convenience init(borderStyle: UITextBorderStyle, textColor: UIColor, placeholderText: String) {
+        self.init()
+        translatesAutoresizingMaskIntoConstraints = false
+        let placeholder = NSAttributedString(string: placeholderText, attributes: [ NSForegroundColorAttributeName: textColor.withAlphaComponent(0.6) ])
+        self.attributedPlaceholder = placeholder
+        self.borderStyle = borderStyle
+        self.textColor = textColor
+
     }
+    
 }

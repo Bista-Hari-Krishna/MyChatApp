@@ -10,31 +10,33 @@ import UIKit
 import Firebase
 
 class EmailVerificationController: UIViewController, UITextFieldDelegate {
+    var backgroundImageView = UIImageView(image: UIImage(named: "3"))
+    var thankYouSeparatorLine = UIView()
     
-    var backgroundImageView: UIImageView = UIImageView()
-    var timer: Timer?
-    var thankYouLabel: UILabel = UILabel()
-    var thankYouSeparatorLine: UIView = UIView()
-    var descriptionLabel: UILabel = UILabel()
-    var emailTextField:UITextField = UITextField()
+    var thankYouLabel = UILabel()
+    var descriptionLabel = UILabel()
+    var activitylabel = UILabel()
     
+    var emailChangeButton = UIButton(title: "CHANGE EMAIL", cornerRadius: 6.0)
+    var resendEmailVerificationButton = UIButton(title: "RESEND EMAIL VERIFICATION", cornerRadius: 10.0)
+    var logoutButton = UIButton(title: "LOGOUT", cornerRadius: 5.0)
     
+    var emailTextField = UITextField()
     
-    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
-    var activitylabel: UILabel = UILabel()
     var activityLabelHeight: NSLayoutConstraint?
     var resendEmailVerificationButtonTopSpace: NSLayoutConstraint?
     
-    var emailChangeButton: UIButton!
-    var resendEmailVerificationButton: UIButton!
-    var logoutButton: UIButton!
-
-    var email = ""
+    var timer = Timer()
     var headerMessage: String?
+
+    var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        email = Auth.auth().currentUser?.email ?? ""
-        
         sendEmailVerification(sender: self)
         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.performVerificationCheck), userInfo: nil, repeats: true)
         setupUI()
@@ -43,12 +45,9 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        timer?.invalidate()
+        timer.invalidate()
     }
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    func setupUI() {
+        func setupUI() {
         setupBackgroundImageView()
         setupThankYouHeader()
         setupDescriptionLabel()
@@ -93,11 +92,9 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         
     }
     func setupEmailTextField() {
-        emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        emailTextField.borderStyle = .none
-        emailTextField.placeholder = "Email"
+        emailTextField = UITextField(borderStyle: .none, textColor: .black, placeholderText: "Email")
         emailTextField.textAlignment = .center
-        emailTextField.text = email
+        emailTextField.text = Auth.auth().currentUser?.email ?? ""
         emailTextField.clearButtonMode = .whileEditing
         emailTextField.font = UIFont.boldSystemFont(ofSize: 17)
         emailTextField.isUserInteractionEnabled = false
@@ -112,8 +109,6 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         
     }
     func setupEmailChangeButton() {
-        emailChangeButton = UIButton(title: "CHANGE EMAIL", cornerRadius: 6.0)
-        emailChangeButton.translatesAutoresizingMaskIntoConstraints = false
         emailChangeButton.addTarget(self, action: #selector(handleEmailChange), for: .touchUpInside)
         
         view.addSubview(emailChangeButton)
@@ -146,20 +141,16 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         activityLabelHeight?.isActive = true
     }
     func setupResendEmailVerificationButton() {
-        resendEmailVerificationButton = UIButton(title: "RESEND EMAIL VERIFICATION", cornerRadius: 10.0)
-        resendEmailVerificationButton.translatesAutoresizingMaskIntoConstraints = false
         resendEmailVerificationButton.addTarget(self, action: #selector(sendEmailVerification(sender:)), for: .touchUpInside)
         
         view.addSubview(resendEmailVerificationButton)
         resendEmailVerificationButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        resendEmailVerificationButtonTopSpace = resendEmailVerificationButton.topAnchor.constraint(equalTo: emailChangeButton.bottomAnchor, constant: 93)
+        resendEmailVerificationButtonTopSpace = resendEmailVerificationButton.topAnchor.constraint(equalTo: emailChangeButton.bottomAnchor, constant: 100)
         resendEmailVerificationButtonTopSpace?.isActive = true
         resendEmailVerificationButton.widthAnchor.constraint(equalToConstant: 300).isActive = true
         resendEmailVerificationButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
     func setupLogoutButton() {
-        logoutButton = UIButton(title: "LOGOUT", cornerRadius: 5)
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
         
         view.addSubview(logoutButton)
@@ -185,12 +176,11 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         emailTextField.becomeFirstResponder()
     }
     func enableControls() {
-        resendEmailVerificationButtonTopSpace?.constant = 93
+        resendEmailVerificationButtonTopSpace?.constant = 100
         activityLabelHeight?.constant = 18
         activityIndicator.startAnimating()
         resendEmailVerificationButton.isEnabled = true
         emailTextField.isUserInteractionEnabled = false
-        
     }
     func handleEmailChange() {
         disableControls()
@@ -213,12 +203,11 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
                 alertCtrl.dismiss(animated: true, completion: nil)
             })
         }
-        
     }
     func performVerificationCheck() {
         if isEmailVerified() {
             print("true")
-            timer?.invalidate()
+            timer.invalidate()
             dismissVc()
         }else {
             print("false")
@@ -235,7 +224,6 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
     }
     func setupBackgroundImageView() {
         view.addSubview(backgroundImageView)
-        backgroundImageView.image = UIImage(named: "3")
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
@@ -270,5 +258,6 @@ extension UIButton {
         layer.cornerRadius = cornerRadius
         setTitle(title, for: .normal)
         setTitleColor(.white, for: .normal)
+        translatesAutoresizingMaskIntoConstraints = false
     }
 }
