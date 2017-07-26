@@ -21,6 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         let navigationController = UINavigationController(rootViewController: ViewController())
+        navigationController.navigationBar.barTintColor = UIColor(patternImage: UIImage(named: "3")!)
+        navigationController.navigationBar.tintColor = .white
+        navigationController.navigationBar.barStyle = .blackTranslucent
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         return true

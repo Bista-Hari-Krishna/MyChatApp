@@ -16,23 +16,28 @@ let containerPadding: CGFloat = 17
 let containerHeight:CGFloat = 175
 
 class LoginController: UIViewController {
-    var backgroundImageView: UIImageView = UIImageView()
-    var inputsContainerView: UIView = UIView()
-    var loginRegisterButton: UIButton = UIButton(type: .system)
-    var nameTextField: UITextField = UITextField()
-    var emailTextField: UITextField = UITextField()
-    var passwordTextField: UITextField = UITextField()
-    var nameTextFieldBorderLine: UIView = UIView()
-    var emailTextFieldBorderLine: UIView = UIView()
-    var loginRegisterSegmentedControl: UISegmentedControl = UISegmentedControl(items: ["Login","Register"])
-    var profileImageView: UIImageView = UIImageView()
+    var backgroundImageView = UIImageView()
+    var inputsContainerView = UIView()
+    var loginRegisterButton = UIButton(type: .system)
+    var nameTextField = UITextField()
+    var emailTextField = UITextField()
+    var passwordTextField = UITextField()
+    var nameTextFieldBorderLine = UIView()
+    var emailTextFieldBorderLine = UIView()
+    var loginRegisterSegmentedControl = UISegmentedControl(items: ["Login","Register"])
+    var profileImageView = UIImageView()
     var tapGesture: UITapGestureRecognizer?
-    var imagePickerController: UIImagePickerController = UIImagePickerController()
+    var imagePickerController = UIImagePickerController()
     
     
     var nameTextFieldHeight: NSLayoutConstraint?
     var nameTextFieldBorderLineHeight: NSLayoutConstraint?
     var inputsContainerViewHeight: NSLayoutConstraint?
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

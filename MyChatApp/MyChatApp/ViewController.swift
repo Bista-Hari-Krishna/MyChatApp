@@ -9,17 +9,41 @@
 import UIKit
 import Firebase
 
-class ViewController: UITableViewController {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    var backgroundImageView = UIImageView()
+    var tableView = UITableView()
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-         checkIfLoggedIn()
+        checkIfLoggedIn()
+        setupBackgroundImageView()
+        setupTableView()
+        edgesForExtendedLayout = []
     }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-       
+    func setupBackgroundImageView() {
+        view.addSubview(backgroundImageView)
+        backgroundImageView.image = UIImage(named: "3")
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
     }
+    func setupTableView() {
+        view.addSubview(tableView)
+        tableView.backgroundColor = .clear
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(customCell.self, forCellReuseIdentifier: "cellId")
+        
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: .init(rawValue: 0), metrics: nil, views: ["tableView":tableView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView]|", options: .init(rawValue: 0), metrics: nil, views: ["tableView":tableView]))
+    }
+    
     func checkIfLoggedIn() {
         if let uid = Auth.auth().currentUser?.uid  {
             let ref = Database.database().reference(withPath: "users")
@@ -63,10 +87,36 @@ class ViewController: UITableViewController {
         }catch let logoutError {
             print(logoutError)
         }
-        let loginController = LoginController()
-        present(loginController, animated: true, completion: nil)
+//        let loginController = LoginController()
+//        present(loginController, animated: true, completion: nil)
         
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 5
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! customCell
+        cell.textLabel?.text = "Winter is coming"
+        cell.backgroundColor = .clear
+        cell.textLabel?.textColor = .white
+        cell.imageView?.image = UIImage(named: "profile")
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50.0
     }
 
 }
-
+class customCell : UITableViewCell {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        self.imageView?.layer.cornerRadius = 22.0
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

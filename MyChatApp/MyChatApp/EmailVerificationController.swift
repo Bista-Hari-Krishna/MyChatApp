@@ -47,7 +47,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         super.viewWillDisappear(animated)
         timer.invalidate()
     }
-        func setupUI() {
+    func setupUI() {
         setupBackgroundImageView()
         setupThankYouHeader()
         setupDescriptionLabel()

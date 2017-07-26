@@ -38,13 +38,13 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print(error!)
                 return
             }
-            if (Auth.auth().currentUser?.isEmailVerified)! {
-                self.dismiss(animated: true, completion: nil)
-            }else {
-                let emailVerificationController = EmailVerificationController()
-                emailVerificationController.headerMessage = "Your email has not been verified"
-                self.present(emailVerificationController, animated: true, completion: nil)
-            }
+//            if (Auth.auth().currentUser?.isEmailVerified)! {
+//                self.dismiss(animated: true, completion: nil)
+//            }else {
+//                let emailVerificationController = EmailVerificationController()
+//                emailVerificationController.headerMessage = "Your email has not been verified"
+//                self.present(emailVerificationController, animated: true, completion: nil)
+//            }
             
         }
     }
@@ -81,10 +81,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
 //                        print(error!)
 //                        return
 //                    }
-                    let emailVerificationController = EmailVerificationController()
-                    emailVerificationController.headerMessage = "Thank you for Registering"
-                    self.present(emailVerificationController, animated: true, completion: nil)
-//                    
+//                    let emailVerificationController = EmailVerificationController()
+//                    emailVerificationController.headerMessage = "Thank you for Registering"
+//                    self.present(emailVerificationController, animated: true, completion: nil)
+//
 //                })
 //                
 //            })
