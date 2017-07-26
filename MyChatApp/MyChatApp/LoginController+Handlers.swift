@@ -47,36 +47,37 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user: User?, error) in
             if error != nil {
                 print(error!)
-            }
-            guard let uid = user?.uid else {
                 return
             }
-            let storageRef = Storage.storage().reference()
-            let profileRef = storageRef.child(uid+".jpg")
-            guard let imageData = UIImageJPEGRepresentation(self.profileImageView.image!, 1.0) else {
-                print("No profile Image")
-                return
-            }
-            profileRef.putData(imageData, metadata: nil, completion: { (metadata, error) in
-                guard let metadata = metadata else {
-                    print(error!)
-                    return
-                }
-                let downloadurl = metadata.downloadURL()!.absoluteString
-                let ref = Database.database().reference()
-                let userReference = ref.child("users").child(uid)
-                let values = ["name":name, "email":email,"url":downloadurl]
-                userReference.setValue(values, withCompletionBlock: { (error, ref) in
-                    if error != nil {
-                        print(error!)
-                        return
-                    }
+//            guard let uid = user?.uid else {
+//                return
+//            }
+//            let storageRef = Storage.storage().reference()
+//            let profileRef = storageRef.child(uid+".jpg")
+//            guard let imageData = UIImageJPEGRepresentation(self.profileImageView.image!, 1.0) else {
+//                print("No profile Image")
+//                return
+//            }
+//            profileRef.putData(imageData, metadata: nil, completion: { (metadata, error) in
+//                guard let metadata = metadata else {
+//                    print(error!)
+//                    return
+//                }
+//                let downloadurl = metadata.downloadURL()!.absoluteString
+//                let ref = Database.database().reference()
+//                let userReference = ref.child("users").child(uid)
+//                let values = ["name":name, "email":email,"url":downloadurl]
+//                userReference.setValue(values, withCompletionBlock: { (error, ref) in
+//                    if error != nil {
+//                        print(error!)
+//                        return
+//                    }
                     let emailVerificationController = EmailVerificationController()
                     self.present(emailVerificationController, animated: true, completion: nil)
-                    
-                })
-                
-            })
+//                    
+//                })
+//                
+//            })
             
         })
 

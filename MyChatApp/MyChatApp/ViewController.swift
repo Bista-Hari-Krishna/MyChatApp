@@ -27,17 +27,19 @@ class ViewController: UITableViewController {
             userRef.observe(.value, with: { (snapshot) in
                 let values = snapshot.value as? [String:String]
                 let name = values?["name"]
-                let urlString = values?["url"]
-                let downloadUrl = URL(string: urlString!)
-                self.navigationItem.title = name
-                let task = URLSession.shared.dataTask(with: downloadUrl!, completionHandler: { (data, response, error) in
-                    if let error = error {
-                        print(error)
-                        return
-                    }
-                    self.setUpNavigationBar(title: name!, image: UIImage(data: data!)!)
-                })
-                task.resume()
+                let urlString = values?["url"] ?? ""
+                if let downloadUrl = URL(string: urlString) {
+                    self.navigationItem.title = name
+                    let task = URLSession.shared.dataTask(with: downloadUrl, completionHandler: { (data, response, error) in
+                        if let error = error {
+                            print(error)
+                            return
+                        }
+                        self.setUpNavigationBar(title: name!, image: UIImage(data: data!)!)
+                    })
+                    task.resume()
+                }
+                
                 
             })
         }else {
