@@ -12,6 +12,8 @@ import Firebase
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
     func handleLoginRegisterChange(_ sender: UISegmentedControl) {
+        passwordTextField.text = ""
+        nameTextField.text = ""
         loginRegisterButton.setTitle(loginRegisterSegmentedControl.titleForSegment(at: sender.selectedSegmentIndex), for: .normal)
         let selectedIndex = sender.selectedSegmentIndex
         
@@ -36,7 +38,14 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print(error!)
                 return
             }
-            self.dismiss(animated: true, completion: nil)
+            if (Auth.auth().currentUser?.isEmailVerified)! {
+                self.dismiss(animated: true, completion: nil)
+            }else {
+                let emailVerificationController = EmailVerificationController()
+                emailVerificationController.headerMessage = "Your email has not been verified"
+                self.present(emailVerificationController, animated: true, completion: nil)
+            }
+            
         }
     }
     func handleRegister() {
@@ -73,6 +82,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
 //                        return
 //                    }
                     let emailVerificationController = EmailVerificationController()
+                    emailVerificationController.headerMessage = "Thank you for Registering"
                     self.present(emailVerificationController, animated: true, completion: nil)
 //                    
 //                })

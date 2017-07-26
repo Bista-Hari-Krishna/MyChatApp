@@ -39,6 +39,12 @@ class LoginController: UIViewController {
         setupUI()
         imagePickerController.delegate = self
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        nameTextField.text = ""
+        emailTextField.text = ""
+        passwordTextField.text = ""
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
     }

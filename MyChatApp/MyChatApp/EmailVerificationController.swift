@@ -18,7 +18,8 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
     var descriptionLabel: UILabel = UILabel()
     var emailTextField:UITextField = UITextField()
     
-    var email = ""
+    
+    
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
     var activitylabel: UILabel = UILabel()
     var activityLabelHeight: NSLayoutConstraint?
@@ -27,9 +28,12 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
     var emailChangeButton: UIButton!
     var resendEmailVerificationButton: UIButton!
     var logoutButton: UIButton!
-    
+
+    var email = ""
+    var headerMessage: String?
     override func viewDidLoad() {
         super.viewDidLoad()
+        email = Auth.auth().currentUser?.email ?? ""
         
         sendEmailVerification(sender: self)
         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.performVerificationCheck), userInfo: nil, repeats: true)
@@ -57,7 +61,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
     func setupThankYouHeader() {
         thankYouLabel.translatesAutoresizingMaskIntoConstraints = false
         thankYouLabel.numberOfLines = 0
-        thankYouLabel.text = "Thank you for registering"
+        thankYouLabel.text = headerMessage ?? ""
         thankYouLabel.textAlignment = .center
         thankYouLabel.textColor = .white
         thankYouLabel.font = UIFont.boldSystemFont(ofSize: 17)
