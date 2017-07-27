@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Firebase
 
-extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate  {
     func handleLoginRegisterChange(_ sender: UISegmentedControl) {
         passwordTextField.text = ""
         nameTextField.text = ""
@@ -120,6 +120,32 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             present(imagePickerController, animated: true, completion: nil)
         }
     }
+    func setupObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillShow(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillHide(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
+    }
+    func keyBoardWillShow(notification: Notification) {
+        let keyBoardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        if let activeTextField = activeTextField {
+            let relativeTextFieldFrame = activeTextField.convert(activeTextField.bounds, to: view)
+            let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: (keyBoardFrame?.height)!, right: 0)
+            scrollView.contentInset = contentInset
+            scrollView.scrollIndicatorInsets = contentInset
+            
+            var aRect = view.frame
+            aRect.size.height -= ((keyBoardFrame?.height)! + 10 )
+            if !aRect.contains(relativeTextFieldFrame.origin) {
+                scrollView.scrollRectToVisible(relativeTextFieldFrame, animated: true)
+            }
+        }
+    }
+    func keyBoardWillHide(notification: Notification) {
+        let keyBoardFrame = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -(keyBoardFrame?.height)!, right: 0)
+        scrollView.contentInset = contentInset
+        scrollView.scrollIndicatorInsets = contentInset
+    }
+
     
     //MARK: - UIImagePickerController delegate
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -129,5 +155,18 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         let profileImage = info[UIImagePickerControllerEditedImage] as! UIImage
         profileImageView.image = profileImage
         dismiss(animated: true, completion: nil)
+    }
+    //MARK: - UItextfield delegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField == nameTextField {
+            emailTextField.becomeFirstResponder()
+        }else if textField == emailTextField {
+            passwordTextField.becomeFirstResponder()
+        }
+        return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextField = textField
     }
 }

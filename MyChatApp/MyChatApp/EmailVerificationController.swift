@@ -92,13 +92,12 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         
     }
     func setupEmailTextField() {
-        emailTextField = UITextField(borderStyle: .none, textColor: .black, placeholderText: "Email")
+        emailTextField = UITextField(borderStyle: .none, textColor: .black, placeholderText: "Email",returnKeyType: .send)
         emailTextField.textAlignment = .center
         emailTextField.text = Auth.auth().currentUser?.email ?? ""
         emailTextField.clearButtonMode = .whileEditing
         emailTextField.font = UIFont.boldSystemFont(ofSize: 17)
         emailTextField.isUserInteractionEnabled = false
-        emailTextField.returnKeyType = .send
         emailTextField.delegate = self
         
         view.addSubview(emailTextField)
