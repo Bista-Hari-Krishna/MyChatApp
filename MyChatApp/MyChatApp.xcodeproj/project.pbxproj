@@ -17,6 +17,11 @@
 		818B2E2A1F23C892009D830A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 818B2E291F23C892009D830A /* Assets.xcassets */; };
 		818B2E2D1F23C892009D830A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 818B2E2B1F23C892009D830A /* LaunchScreen.storyboard */; };
 		818B2E361F23CB15009D830A /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818B2E351F23CB15009D830A /* LoginController.swift */; };
+		81FEA7FF1F2A3341008A51D7 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FEA7FE1F2A3341008A51D7 /* NewMessageController.swift */; };
+		81FEA8021F2A400F008A51D7 /* ChatUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FEA8011F2A400F008A51D7 /* ChatUserCell.swift */; };
+		81FEA8051F2A408F008A51D7 /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FEA8041F2A408F008A51D7 /* ChatUser.swift */; };
+		81FEA8081F2A4139008A51D7 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FEA8071F2A4139008A51D7 /* NavigationController.swift */; };
+		81FEA80B1F2A6725008A51D7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FEA80A1F2A6725008A51D7 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +38,11 @@
 		818B2E2C1F23C892009D830A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		818B2E2E1F23C892009D830A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		818B2E351F23CB15009D830A /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		81FEA7FE1F2A3341008A51D7 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		81FEA8011F2A400F008A51D7 /* ChatUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUserCell.swift; sourceTree = "<group>"; };
+		81FEA8041F2A408F008A51D7 /* ChatUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
+		81FEA8071F2A4139008A51D7 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		81FEA80A1F2A6725008A51D7 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D797C163692A4F785B9BF48F /* Pods-MyChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyChatApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MyChatApp/Pods-MyChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,7 +70,6 @@
 		816CAD931F25F70800C390CA /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
-				816CAD941F25F72F00C390CA /* LoginController+Handlers.swift */,
 			);
 			name = Handlers;
 			sourceTree = "<group>";
@@ -86,6 +95,9 @@
 		818B2E211F23C892009D830A /* MyChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				81FEA8091F2A6711008A51D7 /* Helpers */,
+				81FEA8031F2A4075008A51D7 /* Model */,
+				81FEA8001F2A3FF4008A51D7 /* Custom */,
 				816CAD931F25F70800C390CA /* Handlers */,
 				818B2E341F23CAE7009D830A /* Controllers */,
 				818B2E221F23C892009D830A /* AppDelegate.swift */,
@@ -102,10 +114,37 @@
 			isa = PBXGroup;
 			children = (
 				818B2E351F23CB15009D830A /* LoginController.swift */,
+				816CAD941F25F72F00C390CA /* LoginController+Handlers.swift */,
 				818B2E241F23C892009D830A /* MessagesController.swift */,
 				814821EB1F2750EA007D60C2 /* EmailVerificationController.swift */,
+				81FEA7FE1F2A3341008A51D7 /* NewMessageController.swift */,
+				81FEA8071F2A4139008A51D7 /* NavigationController.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		81FEA8001F2A3FF4008A51D7 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				81FEA8011F2A400F008A51D7 /* ChatUserCell.swift */,
+			);
+			name = Custom;
+			sourceTree = "<group>";
+		};
+		81FEA8031F2A4075008A51D7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				81FEA8041F2A408F008A51D7 /* ChatUser.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		81FEA8091F2A6711008A51D7 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				81FEA80A1F2A6725008A51D7 /* Extensions.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		D345FFC67C4EAAA405F2B9D1 /* Frameworks */ = {
@@ -243,9 +282,14 @@
 			files = (
 				818B2E251F23C892009D830A /* MessagesController.swift in Sources */,
 				818B2E361F23CB15009D830A /* LoginController.swift in Sources */,
+				81FEA7FF1F2A3341008A51D7 /* NewMessageController.swift in Sources */,
 				816CAD951F25F73000C390CA /* LoginController+Handlers.swift in Sources */,
+				81FEA8081F2A4139008A51D7 /* NavigationController.swift in Sources */,
+				81FEA80B1F2A6725008A51D7 /* Extensions.swift in Sources */,
+				81FEA8051F2A408F008A51D7 /* ChatUser.swift in Sources */,
 				814821EC1F2750EA007D60C2 /* EmailVerificationController.swift in Sources */,
 				818B2E231F23C892009D830A /* AppDelegate.swift in Sources */,
+				81FEA8021F2A400F008A51D7 /* ChatUserCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

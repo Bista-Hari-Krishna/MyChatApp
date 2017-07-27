@@ -38,6 +38,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print(error!)
                 return
             }
+            if let uid = user?.uid {
+                self.setLoggedInUserWithUID(uid: uid)
+            }
+            
 //            if (Auth.auth().currentUser?.isEmailVerified)! {
 //                self.dismiss(animated: true, completion: nil)
 //            }else {
@@ -61,8 +65,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             guard let uid = user?.uid else {
                 return
             }
-            let storageRef = Storage.storage().reference()
-            let profileRef = storageRef.child(uid+".jpg")
+            
+            let storageRef = Storage.storage().reference().child("Profile_images")
+            let fileName = NSUUID().uuidString
+            let profileRef = storageRef.child("\(fileName).jpg")
             guard let imageData = UIImageJPEGRepresentation(self.profileImageView.image!, 1.0) else {
                 print("No profile Image")
                 return
@@ -72,23 +78,39 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     print(error!)
                     return
                 }
-                let downloadurl = metadata.downloadURL()!.absoluteString
-                let ref = Database.database().reference()
-                let userReference = ref.child("users").child(uid)
-                let values = ["name":name, "email":email,"url":downloadurl]
-                userReference.setValue(values, withCompletionBlock: { (error, ref) in
-                    if error != nil {
-                        print(error!)
-                        return
-                    }
-//                    let emailVerificationController = EmailVerificationController()
-//                    emailVerificationController.headerMessage = "Thank you for Registering"
-//                    self.present(emailVerificationController, animated: true, completion: nil)
-//
-                })
+                if let profileImageUrl = metadata.downloadURL()?.absoluteString {
+                    let values = ["name":name, "email":email,"profileImageUrl":profileImageUrl]
+                    self.registerUserIntoDatabaseWithUID(uid: uid, values: values)
+                }
                 
             })
             
+        })
+    }
+    func setLoggedInUserWithUID(uid: String) {
+        let ref = Database.database().reference(withPath: "users").child(uid)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            let values = snapshot.value as? [String:AnyObject]
+            let name = values?["name"] as? String ?? ""
+            loggedInUser = name
+            self.dismiss(animated: true, completion: nil)
+        })
+    }
+    func registerUserIntoDatabaseWithUID(uid: String, values: [String: String]) {
+        let ref = Database.database().reference()
+        let userReference = ref.child("users").child(uid)
+
+        userReference.setValue(values, withCompletionBlock: { (error, ref) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            self.setLoggedInUserWithUID(uid: uid)
+            
+            //                    let emailVerificationController = EmailVerificationController()
+            //                    emailVerificationController.headerMessage = "Thank you for Registering"
+            //                    self.present(emailVerificationController, animated: true, completion: nil)
+            //
         })
 
     }

@@ -35,11 +35,7 @@ class LoginController: UIViewController {
     var nameTextFieldHeight: NSLayoutConstraint?
     var nameTextFieldBorderLineHeight: NSLayoutConstraint?
     var inputsContainerViewHeight: NSLayoutConstraint?
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-
+  
 
     override func viewDidLoad() {
         super.viewDidLoad()

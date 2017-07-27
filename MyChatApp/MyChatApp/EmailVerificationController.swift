@@ -31,9 +31,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
 
     var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+   
 
     override func viewDidLoad() {
         super.viewDidLoad()
