@@ -12,7 +12,7 @@
 		814821EC1F2750EA007D60C2 /* EmailVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 814821EB1F2750EA007D60C2 /* EmailVerificationController.swift */; };
 		816CAD951F25F73000C390CA /* LoginController+Handlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816CAD941F25F72F00C390CA /* LoginController+Handlers.swift */; };
 		818B2E231F23C892009D830A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818B2E221F23C892009D830A /* AppDelegate.swift */; };
-		818B2E251F23C892009D830A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818B2E241F23C892009D830A /* ViewController.swift */; };
+		818B2E251F23C892009D830A /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818B2E241F23C892009D830A /* MessagesController.swift */; };
 		818B2E281F23C892009D830A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 818B2E261F23C892009D830A /* Main.storyboard */; };
 		818B2E2A1F23C892009D830A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 818B2E291F23C892009D830A /* Assets.xcassets */; };
 		818B2E2D1F23C892009D830A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 818B2E2B1F23C892009D830A /* LaunchScreen.storyboard */; };
@@ -27,7 +27,7 @@
 		816CAD941F25F72F00C390CA /* LoginController+Handlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LoginController+Handlers.swift"; sourceTree = "<group>"; };
 		818B2E1F1F23C892009D830A /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		818B2E221F23C892009D830A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		818B2E241F23C892009D830A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		818B2E241F23C892009D830A /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		818B2E271F23C892009D830A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		818B2E291F23C892009D830A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		818B2E2C1F23C892009D830A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				818B2E351F23CB15009D830A /* LoginController.swift */,
-				818B2E241F23C892009D830A /* ViewController.swift */,
+				818B2E241F23C892009D830A /* MessagesController.swift */,
 				814821EB1F2750EA007D60C2 /* EmailVerificationController.swift */,
 			);
 			name = Controllers;
@@ -241,7 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				818B2E251F23C892009D830A /* ViewController.swift in Sources */,
+				818B2E251F23C892009D830A /* MessagesController.swift in Sources */,
 				818B2E361F23CB15009D830A /* LoginController.swift in Sources */,
 				816CAD951F25F73000C390CA /* LoginController+Handlers.swift in Sources */,
 				814821EC1F2750EA007D60C2 /* EmailVerificationController.swift in Sources */,

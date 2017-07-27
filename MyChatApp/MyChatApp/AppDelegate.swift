@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        let navigationController = UINavigationController(rootViewController: ViewController())
+        let navigationController = UINavigationController(rootViewController: MessagesController())
         navigationController.navigationBar.barTintColor = UIColor(patternImage: UIImage(named: "3")!)
         navigationController.navigationBar.tintColor = .white
         navigationController.navigationBar.barStyle = .blackTranslucent

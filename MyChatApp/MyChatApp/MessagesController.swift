@@ -12,7 +12,7 @@ import Firebase
 let profileImageViewTopSpace: CGFloat = 5.0
 let profileImageViewLeftSpace:CGFloat = 10.0
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MessagesController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
     var backgroundImageView = UIImageView()
