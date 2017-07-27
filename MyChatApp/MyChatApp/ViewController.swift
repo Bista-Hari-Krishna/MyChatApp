@@ -9,9 +9,14 @@
 import UIKit
 import Firebase
 
+let profileImageViewTopSpace: CGFloat = 5.0
+let profileImageViewLeftSpace:CGFloat = 10.0
+
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
+    
     var backgroundImageView = UIImageView()
-    var tableView = UITableView()
+    var chatTableView = UITableView()
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -33,15 +38,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
     }
     func setupTableView() {
-        view.addSubview(tableView)
-        tableView.backgroundColor = .clear
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(customCell.self, forCellReuseIdentifier: "cellId")
-        
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[tableView]|", options: .init(rawValue: 0), metrics: nil, views: ["tableView":tableView]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[tableView]|", options: .init(rawValue: 0), metrics: nil, views: ["tableView":tableView]))
+        view.addSubview(chatTableView)
+        chatTableView.backgroundColor = .clear
+        chatTableView.translatesAutoresizingMaskIntoConstraints = false
+        chatTableView.delegate = self
+        chatTableView.dataSource = self
+        chatTableView.separatorStyle = .none
+        chatTableView.register(ChatListCell.self, forCellReuseIdentifier: "cellId")
+       
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[chatTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["chatTableView":chatTableView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[chatTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["chatTableView":chatTableView]))
     }
     
     func checkIfLoggedIn() {
@@ -87,8 +93,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }catch let logoutError {
             print(logoutError)
         }
-//        let loginController = LoginController()
-//        present(loginController, animated: true, completion: nil)
+        let loginController = LoginController()
+        present(loginController, animated: true, completion: nil)
         
     }
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -98,11 +104,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return 5
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! customCell
-        cell.textLabel?.text = "Winter is coming"
-        cell.backgroundColor = .clear
-        cell.textLabel?.textColor = .white
-        cell.imageView?.image = UIImage(named: "profile")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ChatListCell
+        cell.profileImageView?.image = UIImage(named: "profile")
+        cell.profileNameLabel?.text = "Dalli"
+        
+        let cellHeight = self.tableView(chatTableView, heightForRowAt: indexPath)
+        let calculateCornerRadius = (cellHeight - (profileImageViewTopSpace * 2)) / 2.0
+        cell.profileImageView?.layer.cornerRadius = calculateCornerRadius
+        cell.profileImageView?.layer.masksToBounds = true
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -110,10 +119,47 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
 
 }
-class customCell : UITableViewCell {
+class ChatListCell : UITableViewCell {
+    var profileImageView: UIImageView?
+    var profileNameLabel: UILabel?
+    var separatorLine: UIView?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        self.imageView?.layer.cornerRadius = 22.0
+        backgroundColor = .clear
+        setupProfileImageView()
+        setupProfileNameLabel()
+        setupSeparatorLine()
+    }
+    func setupProfileImageView() {
+        profileImageView = UIImageView()
+        profileImageView?.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(profileImageView!)
+        
+        profileImageView?.leadingAnchor.constraint(equalTo: leadingAnchor, constant: profileImageViewLeftSpace).isActive = true
+        profileImageView?.heightAnchor.constraint(equalTo: heightAnchor, constant: -(profileImageViewTopSpace * 2)).isActive = true
+        profileImageView?.widthAnchor.constraint(equalTo: heightAnchor, constant: -(profileImageViewTopSpace * 2)).isActive = true
+        profileImageView?.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    }
+    func setupProfileNameLabel() {
+        profileNameLabel = UILabel()
+        addSubview(profileNameLabel!)
+        profileNameLabel?.translatesAutoresizingMaskIntoConstraints = false
+        profileNameLabel?.textColor = .white
+        
+        profileNameLabel?.leadingAnchor.constraint(equalTo: (profileImageView?.trailingAnchor)!, constant: 10).isActive = true
+        profileNameLabel?.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+    }
+    func setupSeparatorLine() {
+        separatorLine = UIView()
+        addSubview(separatorLine!)
+        separatorLine?.translatesAutoresizingMaskIntoConstraints = false
+        separatorLine?.backgroundColor = .white
+        
+        separatorLine?.leadingAnchor.constraint(equalTo: (profileNameLabel?.leadingAnchor)!).isActive = true
+        separatorLine?.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -profileImageViewLeftSpace).isActive = true
+        separatorLine?.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        separatorLine?.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -0.5).isActive = true
     }
     
     required init?(coder aDecoder: NSCoder) {
