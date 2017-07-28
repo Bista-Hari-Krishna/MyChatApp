@@ -10,45 +10,65 @@ import UIKit
 import Firebase
 
 
-var loggedInUser: String?
-class MessagesController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+class MessagesController: UIViewController, UIPopoverPresentationControllerDelegate {
     
     var backgroundImageView = UIImageView()
     var messagesTableView = UITableView()
     var newMessageButton =  UIButton(type: .custom)
+    var profileIconImageView = UIImageView()
+    var profileController =  ProfileController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupProfileIcon(withUrlString: nil)
-        setupBackgroundImageView()
-        setupTableView()
-        setupNewMessageButton()
+        checkIfUserIsLoggedIn()
+        setupUI()
         edgesForExtendedLayout = []
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LOGOUT", style: .plain, target: self, action: #selector(handleLogout))
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let loggedInUser = loggedInUser {
-            navigationItem.title = loggedInUser
+        if let user = UserDefaultManager.shared.loggedInUser {
+            showNavigationBarInfo(for: user)
         }
-        checkIfUserIsLoggedIn()
+        let notificationName = Notification.Name("logout")
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLogout), name: notificationName, object: nil)
     }
-    func setupProfileIcon(withUrlString urlString: String?) {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        let  profileIconImageView = UIImageView()
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+    func setupUI() {
+        setupProfileIcon()
+        setupBackgroundImageView()
+        setupTableView()
+        setupNewMessageButton()
+        profileController.modalPresentationStyle = .popover
+        profileController.preferredContentSize = CGSize(width: 200, height: 230)
+    }
+    func viewProfileInfo() {
+        let popOver = profileController.popoverPresentationController
+        popOver?.permittedArrowDirections = .up
+        popOver?.delegate = self
+        popOver?.sourceView = profileIconImageView
+        popOver?.sourceRect = profileIconImageView.bounds
+        present(profileController, animated: true, completion: nil)
+    }
+    func setupProfileIcon() {
         profileIconImageView.layer.cornerRadius = 17.5
         profileIconImageView.layer.masksToBounds = true
         profileIconImageView.contentMode = .scaleAspectFill
         profileIconImageView.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
         profileIconImageView.isUserInteractionEnabled = true
-        profileIconImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNewMessage)))
+        profileIconImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewProfileInfo)))
         
         let profileIconBarButtonItem = UIBarButtonItem(customView: profileIconImageView)
         navigationItem.rightBarButtonItem = profileIconBarButtonItem
-        guard let urlString = urlString else {
-            profileIconImageView.image = UIImage(named: "profile")
-            return
-        }
-        profileIconImageView.loadImageUsingCacheWithUrlString(urlString: urlString)
+    }
+    func showNavigationBarInfo(for chatUser: ChatUser) {
+        navigationItem.title = chatUser.name
+        profileIconImageView.loadImageUsingCacheWithUrlString(urlString: chatUser.profileImageUrl)
     }
     func setupNewMessageButton() {
         view.addSubview(newMessageButton)
@@ -87,57 +107,23 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func checkIfUserIsLoggedIn() {
-        if let uid = Auth.auth().currentUser?.uid  {
-            let ref = Database.database().reference(withPath: "users").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                if let dictionary = snapshot.value as? [String:String] {
-                    let user = ChatUser()
-                    user.setValuesForKeys(dictionary)
-                    self.navigationItem.title = user.name ?? ""
-                    self.setupProfileIcon(withUrlString: user.profileImageUrl)
-                }
-                
-//                let values = snapshot.value as? [String:AnyObject]
-//                let name = values?["name"] as? String ?? ""
-//                self.navigationItem.title = name
-//                if let downloadUrl = dictionaryWithValues(forKeys: <#T##[String]#>)
-            })
-            
-//            userRef.observe(.value, with: { (snapshot) in
-//                let values = snapshot.value as? [String:String]
-//                let name = values?["name"]
-//                self.navigationItem.title = name
-//                let urlString = values?["url"] ?? ""
-//                if let downloadUrl = URL(string: urlString) {
-//                    self.navigationItem.title = name
-//                    let task = URLSession.shared.dataTask(with: downloadUrl, completionHandler: { (data, response, error) in
-//                        if let error = error {
-//                            print(error)
-//                            return
-//                        }
-//                        self.setUpNavigationBar(title: name!, image: UIImage(data: data!)!)
-//                    })
-//                    task.resume()
-//                }
-//                
-                
-//            })
-        }else {
+        guard let uid = Auth.auth().currentUser?.uid else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
-            loggedInUser = nil
+            return
         }
- 
-    }
-    func setUpNavigationBar(title:String,image: UIImage) {
-        DispatchQueue.main.async {
-            self.navigationItem.title = title
-        }
-        
+        let ref = Database.database().reference(withPath: "users").child(uid)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String:String] {
+               let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!)
+                UserDefaultManager.shared.saveLoggedInUser(user: user)
+                self.showNavigationBarInfo(for: user)
+            }
+        })
     }
     func handleLogout() {
         do {
             try Auth.auth().signOut()
+            UserDefaultManager.shared.deleteLoggedInUser()
         }catch let logoutError {
             print(logoutError)
         }
@@ -145,6 +131,13 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
         present(loginController, animated: true, completion: nil)
     }
 
+    //MARK:- UIPopOverControllerDelegate
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return .none
+    }
+
+}
+extension MessagesController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 5
     }
@@ -153,11 +146,10 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.profileImageView?.image = UIImage(named: "profile")
         cell.textLabel?.text = "Dalli"
         cell.detailTextLabel?.text = "krish7hari@gmail.com"
-       
+        
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70.0
     }
-
 }

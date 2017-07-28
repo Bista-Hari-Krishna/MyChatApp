@@ -24,10 +24,10 @@ class NewMessageController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     func fetchUsers() {
         Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                let chatUser = ChatUser()
-                chatUser.setValuesForKeys(dictionary)
-                self.chatUsers.append(chatUser)
+            if let dictionary = snapshot.value as? [String: String] {
+                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!)
+                    
+                self.chatUsers.append(user)
                 DispatchQueue.main.async {
                     self.newMessageTableView.reloadData()
                 }
@@ -65,9 +65,7 @@ class NewMessageController: UIViewController, UITableViewDelegate, UITableViewDa
         let chatUser = chatUsers[indexPath.row]
         cell.textLabel?.text = chatUser.name
         cell.detailTextLabel?.text = chatUser.email
-        if let profileImageUrl = chatUser.profileImageUrl {
-            cell.profileImageView?.loadImageUsingCacheWithUrlString(urlString: profileImageUrl)
-        }
+        cell.profileImageView?.loadImageUsingCacheWithUrlString(urlString: chatUser.profileImageUrl)
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

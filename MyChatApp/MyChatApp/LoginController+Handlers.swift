@@ -90,9 +90,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     func setLoggedInUserWithUID(uid: String) {
         let ref = Database.database().reference(withPath: "users").child(uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            let values = snapshot.value as? [String:AnyObject]
-            let name = values?["name"] as? String ?? ""
-            loggedInUser = name
+            if let dictionary = snapshot.value as? [String:String] {
+                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!)
+                UserDefaultManager.shared.saveLoggedInUser(user: user)
+            }
             self.dismiss(animated: true, completion: nil)
         })
     }
