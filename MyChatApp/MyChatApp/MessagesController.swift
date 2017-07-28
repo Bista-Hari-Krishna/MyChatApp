@@ -19,9 +19,7 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New message", style: .plain, target: self, action: #selector(handleNewMessage))
-        checkIfUserIsLoggedIn()
+        setupProfileIcon(withUrlString: nil)
         setupBackgroundImageView()
         setupTableView()
         setupNewMessageButton()
@@ -32,6 +30,25 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
         if let loggedInUser = loggedInUser {
             navigationItem.title = loggedInUser
         }
+        checkIfUserIsLoggedIn()
+    }
+    func setupProfileIcon(withUrlString urlString: String?) {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        let  profileIconImageView = UIImageView()
+        profileIconImageView.layer.cornerRadius = 17.5
+        profileIconImageView.layer.masksToBounds = true
+        profileIconImageView.contentMode = .scaleAspectFill
+        profileIconImageView.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
+        profileIconImageView.isUserInteractionEnabled = true
+        profileIconImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNewMessage)))
+        
+        let profileIconBarButtonItem = UIBarButtonItem(customView: profileIconImageView)
+        navigationItem.rightBarButtonItem = profileIconBarButtonItem
+        guard let urlString = urlString else {
+            profileIconImageView.image = UIImage(named: "profile")
+            return
+        }
+        profileIconImageView.loadImageUsingCacheWithUrlString(urlString: urlString)
     }
     func setupNewMessageButton() {
         view.addSubview(newMessageButton)
@@ -73,9 +90,18 @@ class MessagesController: UIViewController, UITableViewDataSource, UITableViewDe
         if let uid = Auth.auth().currentUser?.uid  {
             let ref = Database.database().reference(withPath: "users").child(uid)
             ref.observeSingleEvent(of: .value, with: { (snapshot) in
-                let values = snapshot.value as? [String:AnyObject]
-                let name = values?["name"] as? String ?? ""
-                self.navigationItem.title = name
+                
+                if let dictionary = snapshot.value as? [String:String] {
+                    let user = ChatUser()
+                    user.setValuesForKeys(dictionary)
+                    self.navigationItem.title = user.name ?? ""
+                    self.setupProfileIcon(withUrlString: user.profileImageUrl)
+                }
+                
+//                let values = snapshot.value as? [String:AnyObject]
+//                let name = values?["name"] as? String ?? ""
+//                self.navigationItem.title = name
+//                if let downloadUrl = dictionaryWithValues(forKeys: <#T##[String]#>)
             })
             
 //            userRef.observe(.value, with: { (snapshot) in

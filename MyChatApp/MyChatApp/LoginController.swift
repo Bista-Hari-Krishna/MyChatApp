@@ -193,21 +193,3 @@ class LoginController: UIViewController {
    
 }
 
-extension UIColor {
-    convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-        self.init(red:r/255 ,green:g/255, blue:b/255, alpha:1)
-    }
-}
-extension UITextField {
-    convenience init(borderStyle: UITextBorderStyle, textColor: UIColor, placeholderText: String, returnKeyType: UIReturnKeyType) {
-        self.init()
-        translatesAutoresizingMaskIntoConstraints = false
-        let placeholder = NSAttributedString(string: placeholderText, attributes: [ NSForegroundColorAttributeName: textColor.withAlphaComponent(0.6) ])
-        self.attributedPlaceholder = placeholder
-        self.borderStyle = borderStyle
-        self.textColor = textColor
-        self.returnKeyType = returnKeyType
-
-    }
-    
-}
