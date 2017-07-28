@@ -11,25 +11,24 @@ import Firebase
 
 
 
-class MessagesController: UIViewController, UIPopoverPresentationControllerDelegate {
+class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate {
     
-    var backgroundImageView = UIImageView()
-    var messagesTableView = UITableView()
-    var newMessageButton =  UIButton(type: .custom)
+    var chatsTableView = UITableView()
+    var newChatButton =  UIButton(type: .custom)
     var profileIconImageView = UIImageView()
     var profileController =  ProfileController()
+    var chats = [Chats]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
         setupUI()
         edgesForExtendedLayout = []
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LOGOUT", style: .plain, target: self, action: #selector(handleLogout))
-        
+        fetchUserChats()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let user = UserDefaultManager.shared.loggedInUser {
+        if let user = UserDefaultsManager.shared.loggedInUser {
             showNavigationBarInfo(for: user)
         }
         let notificationName = Notification.Name("logout")
@@ -39,11 +38,24 @@ class MessagesController: UIViewController, UIPopoverPresentationControllerDeleg
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
+    func fetchUserChats() {
+        let ref = Database.database().reference().child("chats")
+        ref.observe(.childAdded, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String:AnyObject] {
+                let chat = Chats()
+                chat.setValuesForKeys(dictionary)
+                self.chats.append(chat)
+                DispatchQueue.main.async {
+                    self.chatsTableView.reloadData()
+                }
+            }
+        }, withCancel: nil)
+    }
     func setupUI() {
+        view.putBackgroundImage()
         setupProfileIcon()
-        setupBackgroundImageView()
         setupTableView()
-        setupNewMessageButton()
+        setupNewChatButton()
         profileController.modalPresentationStyle = .popover
         profileController.preferredContentSize = CGSize(width: 200, height: 230)
     }
@@ -70,42 +82,41 @@ class MessagesController: UIViewController, UIPopoverPresentationControllerDeleg
         navigationItem.title = chatUser.name
         profileIconImageView.loadImageUsingCacheWithUrlString(urlString: chatUser.profileImageUrl)
     }
-    func setupNewMessageButton() {
-        view.addSubview(newMessageButton)
-        newMessageButton.translatesAutoresizingMaskIntoConstraints = false
-        newMessageButton.setImage(UIImage(named:"newMsg"), for: .normal)
-        view.bringSubview(toFront: newMessageButton)
-        newMessageButton.addTarget(self, action: #selector(handleNewMessage), for: .touchUpInside)
+    func setupNewChatButton() {
+        view.addSubview(newChatButton)
+        newChatButton.translatesAutoresizingMaskIntoConstraints = false
+        newChatButton.setImage(UIImage(named:"newMsg"), for: .normal)
+        view.bringSubview(toFront: newChatButton)
+        newChatButton.addTarget(self, action: #selector(handleNewChat), for: .touchUpInside)
         
-        newMessageButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
-        newMessageButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        newMessageButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
-        newMessageButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        newChatButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        newChatButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        newChatButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
+        newChatButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
     }
-    func setupBackgroundImageView() {
-        view.addSubview(backgroundImageView)
-        backgroundImageView.image = UIImage(named: "3")
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
-    }
-    func handleNewMessage() {
-        let navigationController = NavigationController(rootViewController: NewMessageController())
+    func handleNewChat() {
+        let newChatController = NewChatController()
+        newChatController.chatsController = self
+        let navigationController = NavigationController(rootViewController: newChatController)
         present(navigationController, animated: true, completion: nil)
     }
     func setupTableView() {
-        view.addSubview(messagesTableView)
-        messagesTableView.backgroundColor = .clear
-        messagesTableView.translatesAutoresizingMaskIntoConstraints = false
-        messagesTableView.delegate = self
-        messagesTableView.dataSource = self
-        messagesTableView.separatorStyle = .none
-        messagesTableView.register(ChatUserCell.self, forCellReuseIdentifier: "cellId")
+        view.addSubview(chatsTableView)
+        chatsTableView.backgroundColor = .clear
+        chatsTableView.translatesAutoresizingMaskIntoConstraints = false
+        chatsTableView.delegate = self
+        chatsTableView.dataSource = self
+        chatsTableView.separatorStyle = .none
+        chatsTableView.register(ChatUserCell.self, forCellReuseIdentifier: "cellId")
        
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[messagesTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["messagesTableView":messagesTableView]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[messagesTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["messagesTableView":messagesTableView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[chatsTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["chatsTableView":chatsTableView]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[chatsTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["chatsTableView":chatsTableView]))
     }
-    
+    func showChatLogControllerForUser(chatUser: ChatUser) {
+        let chatLogController = ChatLogController()
+        chatLogController.chatUser = chatUser
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
     func checkIfUserIsLoggedIn() {
         guard let uid = Auth.auth().currentUser?.uid else {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
@@ -114,8 +125,8 @@ class MessagesController: UIViewController, UIPopoverPresentationControllerDeleg
         let ref = Database.database().reference(withPath: "users").child(uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String:String] {
-               let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!)
-                UserDefaultManager.shared.saveLoggedInUser(user: user)
+                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!, id: snapshot.key)
+                UserDefaultsManager.shared.saveLoggedInUser(user: user)
                 self.showNavigationBarInfo(for: user)
             }
         })
@@ -123,7 +134,7 @@ class MessagesController: UIViewController, UIPopoverPresentationControllerDeleg
     func handleLogout() {
         do {
             try Auth.auth().signOut()
-            UserDefaultManager.shared.deleteLoggedInUser()
+            UserDefaultsManager.shared.deleteLoggedInUser()
         }catch let logoutError {
             print(logoutError)
         }
@@ -137,19 +148,30 @@ class MessagesController: UIViewController, UIPopoverPresentationControllerDeleg
     }
 
 }
-extension MessagesController: UITableViewDataSource, UITableViewDelegate {
+extension ChatsController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return chats.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ChatUserCell
-        cell.profileImageView?.image = UIImage(named: "profile")
-        cell.textLabel?.text = "Dalli"
-        cell.detailTextLabel?.text = "krish7hari@gmail.com"
+       // cell.profileImageView?.image = UIImage(named: "profile")
+        let chat = chats[indexPath.row]
+        cell.detailTextLabel?.text = chat.text
+        
+        let ref = Database.database().reference().child("users").child(chat.toId!)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                cell.textLabel?.text = dictionary["name"] as? String
+                cell.profileImageView?.loadImageUsingCacheWithUrlString(urlString: (dictionary["profileImageUrl"] as? String)!)
+            }
+        })
         
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70.0
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
     }
 }

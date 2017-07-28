@@ -16,7 +16,7 @@ let containerPadding: CGFloat = 17
 let containerHeight:CGFloat = 175
 
 class LoginController: UIViewController {
-    var backgroundImageView = UIImageView()
+   
     var inputsContainerView = UIView()
     var loginRegisterButton = UIButton(type: .system)
     var nameTextField = UITextField()
@@ -55,7 +55,7 @@ class LoginController: UIViewController {
     }
 
     func setupUI() {
-        setupBackgroundImageView()
+        view.putBackgroundImage()
         setupScrollView()
         setupInputsContainerView()
         setupLoginRegisterSegmentedControl()
@@ -74,13 +74,6 @@ class LoginController: UIViewController {
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[scrollView]|", options: .init(rawValue: 0), metrics: nil, views: ["scrollView":scrollView]))
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[scrollView]|", options: .init(rawValue: 0), metrics: nil, views: ["scrollView":scrollView]))
         
-    }
-    func setupBackgroundImageView() {
-        view.addSubview(backgroundImageView)
-        backgroundImageView.image = UIImage(named: "3")
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
     }
     func setupProfileImageView() {
         scrollView.addSubview(profileImageView)

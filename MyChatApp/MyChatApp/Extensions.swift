@@ -54,3 +54,13 @@ extension UITextField {
     }
     
 }
+extension UIView {
+    func putBackgroundImage() {
+        let backgroundImageView = UIImageView()
+        addSubview(backgroundImageView)
+        backgroundImageView.image = UIImage(named: "3")
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
+    }
+}

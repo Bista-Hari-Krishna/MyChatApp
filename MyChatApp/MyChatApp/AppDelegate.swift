@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         window = UIWindow(frame: UIScreen.main.bounds)
-        let navigationController = NavigationController(rootViewController: MessagesController())
+        let navigationController = NavigationController(rootViewController: ChatsController())
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         return true

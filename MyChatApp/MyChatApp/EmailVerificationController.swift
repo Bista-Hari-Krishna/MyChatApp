@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class EmailVerificationController: UIViewController, UITextFieldDelegate {
-    var backgroundImageView = UIImageView(image: UIImage(named: "3"))
+    
     var thankYouSeparatorLine = UIView()
     
     var thankYouLabel = UILabel()
@@ -46,7 +46,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         timer.invalidate()
     }
     func setupUI() {
-        setupBackgroundImageView()
+        view.putBackgroundImage()
         setupThankYouHeader()
         setupDescriptionLabel()
         setupEmailTextField()
@@ -219,13 +219,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         }
         return false
     }
-    func setupBackgroundImageView() {
-        view.addSubview(backgroundImageView)
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[backgroundImageView]|", options: .init(rawValue: 0), metrics: nil, views: ["backgroundImageView":backgroundImageView]))
-    }
-    func dismissVc() {
+       func dismissVc() {
         dismiss(animated: false, completion: nil)
         presentingViewController?.dismiss(animated: true, completion: nil)
     }

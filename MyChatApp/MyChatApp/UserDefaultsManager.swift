@@ -1,5 +1,5 @@
 //
-//  UserDefaultManager.swift
+//  UserDefaultsManager.swift
 //  MyChatApp
 //
 //  Created by iOS on 28/07/17.
@@ -8,10 +8,10 @@
 
 import UIKit
 
-class UserDefaultManager: NSObject {
+class UserDefaultsManager: NSObject {
     let kLoggedInUser = "loggedInUser"
     let userDefaults = UserDefaults.standard
-    static let shared = UserDefaultManager()
+    static let shared = UserDefaultsManager()
     var loggedInUser: ChatUser? {
         return getLoggedInUser() ?? nil
     }

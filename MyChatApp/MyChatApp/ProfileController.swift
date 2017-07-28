@@ -14,11 +14,11 @@ class ProfileController: UITableViewController {
     var profileDetails = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loggedInUser = UserDefaultManager.shared.loggedInUser
+        loggedInUser = UserDefaultsManager.shared.loggedInUser
         if let user = loggedInUser {
-            profileDetails = [user.name,user.email,"Sign out"]
+            profileDetails = [user.name,user.email,"logout"]
         }
-        profileDetails = ["Jack","jack@gmail.com","logout"]
+        tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         tableView.isScrollEnabled = false
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -28,6 +28,9 @@ class ProfileController: UITableViewController {
         let cell = UITableViewCell(style: .default, reuseIdentifier: cellId)
         cell.textLabel?.text = profileDetails[indexPath.row]
         cell.textLabel?.textAlignment = .center
+        if indexPath.row != 2 {
+            cell.selectionStyle = .none
+        }
         return cell
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -50,8 +53,10 @@ class ProfileController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 2 {
-            let notificationName = Notification.Name("logout")
-            NotificationCenter.default.post(name: notificationName, object: nil)
+            dismiss(animated: true, completion: {
+                let notificationName = Notification.Name("logout")
+                NotificationCenter.default.post(name: notificationName, object: nil)
+            })
         }
     }
 }

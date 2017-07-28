@@ -69,7 +69,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             let storageRef = Storage.storage().reference().child("Profile_images")
             let fileName = NSUUID().uuidString
             let profileRef = storageRef.child("\(fileName).jpg")
-            guard let imageData = UIImageJPEGRepresentation(self.profileImageView.image!, 1.0) else {
+            guard let imageData = UIImageJPEGRepresentation(self.profileImageView.image!, 0.1) else {
                 print("No profile Image")
                 return
             }
@@ -91,8 +91,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         let ref = Database.database().reference(withPath: "users").child(uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String:String] {
-                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!)
-                UserDefaultManager.shared.saveLoggedInUser(user: user)
+                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!, id: snapshot.key)
+                UserDefaultsManager.shared.saveLoggedInUser(user: user)
             }
             self.dismiss(animated: true, completion: nil)
         })
