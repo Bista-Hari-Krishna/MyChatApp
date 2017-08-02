@@ -7,24 +7,27 @@
 //
 
 import UIKit
-
+/**
+  It subclasses the UITableViewCell.
+  This cell has a circular profileImageView and default textlabel and detailTextlabel.
+  */
 class ChatUserCell : UITableViewCell {
     var profileImageView: UIImageView?
     override func layoutSubviews() {
         super.layoutSubviews()
-        textLabel?.frame = CGRect(x: 70, y: (textLabel?.frame.origin.y)! - 2, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)
-        detailTextLabel?.frame = CGRect(x: 70, y: (detailTextLabel?.frame.origin.y)! + 2, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!)
+        textLabel?.frame = CGRect(x: 70, y: (textLabel?.frame.origin.y)! - 2, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)  //override textLabel frame
+        detailTextLabel?.frame = CGRect(x: 70, y: (detailTextLabel?.frame.origin.y)! + 2, width: (detailTextLabel?.frame.width)!, height: (detailTextLabel?.frame.height)!) //override detailTextLabel frame
     }
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
-        setupProfileImageView()
-        setupSeparatorLine()
+        configureProfileImageView()
+        configureSeparatorLine()
         textLabel?.textColor = .white
         detailTextLabel?.textColor = .white
     }
-    func setupProfileImageView() {
+    func configureProfileImageView() {
         profileImageView = UIImageView()
         profileImageView?.translatesAutoresizingMaskIntoConstraints = false
         profileImageView?.contentMode = .scaleAspectFill
@@ -37,7 +40,7 @@ class ChatUserCell : UITableViewCell {
         profileImageView?.layer.cornerRadius = 25
         profileImageView?.layer.masksToBounds = true
     }
-//    func setupProfileNameLabel() {
+//    func configureProfileNameLabel() {
 //        profileNameLabel = UILabel()
 //        addSubview(profileNameLabel!)
 //        profileNameLabel?.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +49,7 @@ class ChatUserCell : UITableViewCell {
 //        profileNameLabel?.leadingAnchor.constraint(equalTo: (profileImageView?.trailingAnchor)!, constant: 10).isActive = true
 //        profileNameLabel?.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
 //    }
-    func setupSeparatorLine() {
+    func configureSeparatorLine() {
         let separatorLine = UIView()
         addSubview(separatorLine)
         separatorLine.translatesAutoresizingMaskIntoConstraints = false

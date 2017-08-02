@@ -18,7 +18,7 @@ class NewChatController: UIViewController, UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         view.putBackgroundImage()
-        setupTableView()
+        configureTableView()
         edgesForExtendedLayout = []
         fetchUsers()
     }
@@ -38,7 +38,7 @@ class NewChatController: UIViewController, UITableViewDelegate, UITableViewDataS
         dismiss(animated: true, completion: nil)
     }
 
-    func setupTableView() {
+    func configureTableView() {
         view.addSubview(chatUsersTableView)
         chatUsersTableView.backgroundColor = .clear
         chatUsersTableView.translatesAutoresizingMaskIntoConstraints = false

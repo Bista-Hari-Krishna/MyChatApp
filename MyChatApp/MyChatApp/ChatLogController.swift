@@ -16,12 +16,12 @@ class ChatLogController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.putBackgroundImage()
-        setupInputsComponents()
+        configureInputsComponents()
         if let chatUser = chatUser {
             navigationItem.title = chatUser.name
         }
     }
-    func setupInputsComponents() {
+    func configureInputsComponents() {
         let containerView = UIView()
         view.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false

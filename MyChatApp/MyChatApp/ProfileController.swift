@@ -15,9 +15,10 @@ class ProfileController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loggedInUser = UserDefaultsManager.shared.loggedInUser
-        if let user = loggedInUser {
-            profileDetails = [user.name,user.email,"logout"]
-        }
+        profileDetails = [loggedInUser?.name ?? "", loggedInUser?.email ?? "", "logout"]
+//        if let user = loggedInUser {
+//            profileDetails = [user.name,user.email,"logout"]
+//        }
         tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         tableView.isScrollEnabled = false
     }
@@ -41,7 +42,7 @@ class ProfileController: UITableViewController {
         if let loggedInUser = loggedInUser {
             profileImageView.loadImageUsingCacheWithUrlString(urlString: loggedInUser.profileImageUrl)
         }else {
-            profileImageView.image = UIImage(named: "profile")
+            profileImageView.image = UIImage(named: "profile2")
         }
         
         backgroundView.addSubview(profileImageView)

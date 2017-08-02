@@ -11,6 +11,9 @@ import UIKit
 import Firebase
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate  {
+    //MARK: - Action handlers
+    
+    //Handles when segmented control value is changed
     func handleLoginRegisterChange(_ sender: UISegmentedControl) {
         passwordTextField.text = ""
         nameTextField.text = ""
@@ -21,6 +24,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         nameTextFieldHeight?.constant = (selectedIndex == 0 ? 0.0: textFieldHeight)
         nameTextFieldBorderLineHeight?.constant = (selectedIndex == 0 ? 0.0 : borderLineHeight)
     }
+    //Handles when login or register button is tapped
     func handleLoginRegister() {
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
             handleLogin()
@@ -28,11 +32,12 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             handleRegister()
         }
     }
-
+    //Log in to the app
     func handleLogin() {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
         }
+        //Logging into the app with Firebase authentication
         Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
             if error != nil {
                 print(error!)
@@ -52,20 +57,24 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
         }
     }
+    //Register a new user
     func handleRegister() {
         guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
             return
         }
         
+        //Registering a new user for app into Firebase authentication
         Auth.auth().createUser(withEmail: email, password: password, completion: { (user: User?, error) in
             if error != nil {
                 print(error!)
-                return
+                return //returns when user registration fails
             }
             guard let uid = user?.uid else {
                 return
             }
             
+            //Successful registraion
+            //Profile image is stored in Storage of Firebase
             let storageRef = Storage.storage().reference().child("Profile_images")
             let fileName = NSUUID().uuidString
             let profileRef = storageRef.child("\(fileName).jpg")
@@ -79,7 +88,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     return
                 }
                 if let profileImageUrl = metadata.downloadURL()?.absoluteString {
+                    //Successful storing of profile image into Storage
                     let values = ["name":name, "email":email,"profileImageUrl":profileImageUrl]
+                    
+                    //The values is stored into database
                     self.registerUserIntoDatabaseWithUID(uid: uid, values: values)
                 }
                 
@@ -87,34 +99,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
         })
     }
-    func setLoggedInUserWithUID(uid: String) {
-        let ref = Database.database().reference(withPath: "users").child(uid)
-        ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            if let dictionary = snapshot.value as? [String:String] {
-                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!, id: snapshot.key)
-                UserDefaultsManager.shared.saveLoggedInUser(user: user)
-            }
-            self.dismiss(animated: true, completion: nil)
-        })
-    }
-    func registerUserIntoDatabaseWithUID(uid: String, values: [String: String]) {
-        let ref = Database.database().reference()
-        let userReference = ref.child("users").child(uid)
-
-        userReference.setValue(values, withCompletionBlock: { (error, ref) in
-            if error != nil {
-                print(error!)
-                return
-            }
-            self.setLoggedInUserWithUID(uid: uid)
-            
-            //                    let emailVerificationController = EmailVerificationController()
-            //                    emailVerificationController.headerMessage = "Thank you for Registering"
-            //                    self.present(emailVerificationController, animated: true, completion: nil)
-            //
-        })
-
-    }
+    //Handles when profile image of login controller is tapped
     func handleTap(_ gesture: UITapGestureRecognizer) {
         let alertController = UIAlertController(title: nil, message: "Choose", preferredStyle: .actionSheet)
         let photoAlbumAction = UIAlertAction(title: "Photo Album", style: .default) { (action) in
@@ -129,13 +114,45 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         alertController.addAction(dismiss)
         present(alertController, animated: true, completion: nil)
     }
-    func profilePicFromLibrary() {
+
+       //MARK: - Other Methods
+    private func setLoggedInUserWithUID(uid: String) {
+        let ref = Database.database().reference(withPath: "users").child(uid)
+        ref.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String:String] {
+                let user = ChatUser(name: dictionary["name"]!, email: dictionary["email"]!, profileImageUrl: dictionary["profileImageUrl"]!, id: snapshot.key)
+                UserDefaultsManager.shared.saveLoggedInUser(user: user)
+            }
+            self.dismiss(animated: true, completion: nil)
+        })
+    }
+    private func registerUserIntoDatabaseWithUID(uid: String, values: [String: String]) {
+        let ref = Database.database().reference()
+        let userReference = ref.child("users").child(uid)
+        
+        //The name, email is stored into database along with a reference to profile image of Storage
+        userReference.setValue(values, withCompletionBlock: { (error, ref) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            //Successful in storing values into database
+            self.setLoggedInUserWithUID(uid: uid)
+            
+            //                    let emailVerificationController = EmailVerificationController()
+            //                    emailVerificationController.headerMessage = "Thank you for Registering"
+            //                    self.present(emailVerificationController, animated: true, completion: nil)
+            //
+        })
+
+    }
+    private func profilePicFromLibrary() {
         imagePickerController.allowsEditing = true
         imagePickerController.sourceType = .photoLibrary
         imagePickerController.mediaTypes = UIImagePickerController.availableMediaTypes(for: .photoLibrary)!
         present(imagePickerController, animated: true, completion: nil)
     }
-    func profilePicFromCamera() {
+    private func profilePicFromCamera() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             imagePickerController.allowsEditing = true
             imagePickerController.sourceType = .camera
@@ -143,7 +160,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             present(imagePickerController, animated: true, completion: nil)
         }
     }
-    func setupObservers() {
+    func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillShow(notification:)), name: Notification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyBoardWillHide(notification:)), name: Notification.Name.UIKeyboardWillHide, object: nil)
     }

@@ -37,7 +37,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         sendEmailVerification(sender: self)
         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.performVerificationCheck), userInfo: nil, repeats: true)
-        setupUI()
+        configureUI()
         
 
     }
@@ -45,17 +45,17 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         super.viewWillDisappear(animated)
         timer.invalidate()
     }
-    func setupUI() {
+    func configureUI() {
         view.putBackgroundImage()
-        setupThankYouHeader()
-        setupDescriptionLabel()
-        setupEmailTextField()
-        setupEmailChangeButton()
-        setupActivity()
-        setupResendEmailVerificationButton()
-        setupLogoutButton()
+        configureThankYouHeader()
+        configureDescriptionLabel()
+        configureEmailTextField()
+        configureEmailChangeButton()
+        configureActivity()
+        configureResendEmailVerificationButton()
+        configureLogoutButton()
     }
-    func setupThankYouHeader() {
+    func configureThankYouHeader() {
         thankYouLabel.translatesAutoresizingMaskIntoConstraints = false
         thankYouLabel.numberOfLines = 0
         thankYouLabel.text = headerMessage ?? ""
@@ -76,7 +76,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         thankYouSeparatorLine.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         thankYouSeparatorLine.heightAnchor.constraint(equalToConstant: 1.0).isActive = true
     }
-    func setupDescriptionLabel() {
+    func configureDescriptionLabel() {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.numberOfLines = 0
         descriptionLabel.textAlignment = .center
@@ -89,7 +89,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
     }
-    func setupEmailTextField() {
+    func configureEmailTextField() {
         emailTextField = UITextField(borderStyle: .none, textColor: .black, placeholderText: "Email",returnKeyType: .send)
         emailTextField.textAlignment = .center
         emailTextField.text = Auth.auth().currentUser?.email ?? ""
@@ -105,7 +105,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         emailTextField.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
     }
-    func setupEmailChangeButton() {
+    func configureEmailChangeButton() {
         emailChangeButton.addTarget(self, action: #selector(handleEmailChange), for: .touchUpInside)
         
         view.addSubview(emailChangeButton)
@@ -114,7 +114,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         emailChangeButton.widthAnchor.constraint(equalToConstant: 150).isActive = true
         emailChangeButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
     }
-    func setupActivity() {
+    func configureActivity() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.startAnimating()
         activityIndicator.hidesWhenStopped = true
@@ -137,7 +137,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         activityLabelHeight = activitylabel.heightAnchor.constraint(equalToConstant: 18)
         activityLabelHeight?.isActive = true
     }
-    func setupResendEmailVerificationButton() {
+    func configureResendEmailVerificationButton() {
         resendEmailVerificationButton.addTarget(self, action: #selector(sendEmailVerification(sender:)), for: .touchUpInside)
         
         view.addSubview(resendEmailVerificationButton)
@@ -147,7 +147,7 @@ class EmailVerificationController: UIViewController, UITextFieldDelegate {
         resendEmailVerificationButton.widthAnchor.constraint(equalToConstant: 300).isActive = true
         resendEmailVerificationButton.heightAnchor.constraint(equalToConstant: 45).isActive = true
     }
-    func setupLogoutButton() {
+    func configureLogoutButton() {
         logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
         
         view.addSubview(logoutButton)

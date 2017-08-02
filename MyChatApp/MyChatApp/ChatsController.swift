@@ -22,7 +22,7 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
-        setupUI()
+        configureUI()
         edgesForExtendedLayout = []
         fetchUserChats()
     }
@@ -51,11 +51,11 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
             }
         }, withCancel: nil)
     }
-    func setupUI() {
+    func configureUI() {
         view.putBackgroundImage()
-        setupProfileIcon()
-        setupTableView()
-        setupNewChatButton()
+        configureProfileIcon()
+        configureTableView()
+        configureNewChatButton()
         profileController.modalPresentationStyle = .popover
         profileController.preferredContentSize = CGSize(width: 200, height: 230)
     }
@@ -67,12 +67,13 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
         popOver?.sourceRect = profileIconImageView.bounds
         present(profileController, animated: true, completion: nil)
     }
-    func setupProfileIcon() {
+    func configureProfileIcon() {
         profileIconImageView.layer.cornerRadius = 17.5
         profileIconImageView.layer.masksToBounds = true
         profileIconImageView.contentMode = .scaleAspectFill
         profileIconImageView.frame = CGRect(x: 0, y: 0, width: 35, height: 35)
         profileIconImageView.isUserInteractionEnabled = true
+        profileIconImageView.image = UIImage(named: "profile2")
         profileIconImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewProfileInfo)))
         
         let profileIconBarButtonItem = UIBarButtonItem(customView: profileIconImageView)
@@ -82,7 +83,7 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
         navigationItem.title = chatUser.name
         profileIconImageView.loadImageUsingCacheWithUrlString(urlString: chatUser.profileImageUrl)
     }
-    func setupNewChatButton() {
+    func configureNewChatButton() {
         view.addSubview(newChatButton)
         newChatButton.translatesAutoresizingMaskIntoConstraints = false
         newChatButton.setImage(UIImage(named:"newMsg"), for: .normal)
@@ -100,7 +101,7 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
         let navigationController = NavigationController(rootViewController: newChatController)
         present(navigationController, animated: true, completion: nil)
     }
-    func setupTableView() {
+    func configureTableView() {
         view.addSubview(chatsTableView)
         chatsTableView.backgroundColor = .clear
         chatsTableView.translatesAutoresizingMaskIntoConstraints = false
