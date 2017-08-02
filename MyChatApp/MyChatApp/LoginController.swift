@@ -70,12 +70,12 @@ class LoginController: UIViewController {
         passwordTextField.text = ""
     }
     //MARK: - Configure UI components
-    private func configureUI() {
+    private func configureUI() {     
         view.putBackgroundImage()
         configureScrollView()
-        configureProfileImageView()
-        configureLoginRegisterSegmentedControl()
         configureInputsContainerView()
+        configureLoginRegisterSegmentedControl()
+        configureProfileImageView()
         configureNameTextField()
         configureEmailTextField()
         configurePasswordTextField()
@@ -104,7 +104,7 @@ class LoginController: UIViewController {
         profileImageView.isUserInteractionEnabled = true
         
         //Profile image view is placed above the loginregister segmented control
-        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -viewPadding).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: loginRegisterSegmentedControl.topAnchor, constant: -40).isActive = true
         profileImageView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: profileImageHeight).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: profileImageHeight).isActive = true

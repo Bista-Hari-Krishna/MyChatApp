@@ -76,7 +76,7 @@ class ChatLogController: UIViewController {
         guard let fromId = Auth.auth().currentUser?.uid, let toId = chatUser?.id else {
             return
         }
-        let timeStamp: NSNumber = NSNumber(value: Date.timeIntervalBetween1970AndReferenceDate)
+        let timeStamp: NSNumber = NSNumber(value: Date.timeIntervalSinceReferenceDate)
         let values = ["text":messageText,"fromId":fromId,"toId":toId,"timeStamp":timeStamp] as [String : Any]
         childRef.updateChildValues(values)
         inputTextField.text = ""

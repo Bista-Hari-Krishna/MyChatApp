@@ -13,6 +13,7 @@ import UIKit
   */
 class ChatUserCell : UITableViewCell {
     var profileImageView: UIImageView?
+    var timeStampLabel: UILabel?
     override func layoutSubviews() {
         super.layoutSubviews()
         textLabel?.frame = CGRect(x: 70, y: (textLabel?.frame.origin.y)! - 2, width: (textLabel?.frame.width)!, height: (textLabel?.frame.height)!)  //override textLabel frame
@@ -23,11 +24,14 @@ class ChatUserCell : UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
         configureProfileImageView()
+        configureTimeStampLabel()
         configureSeparatorLine()
         textLabel?.textColor = .white
         detailTextLabel?.textColor = .white
+        selectedBackgroundView = UIView(frame: bounds)
+        selectedBackgroundView?.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
-    func configureProfileImageView() {
+    private func configureProfileImageView() {
         profileImageView = UIImageView()
         profileImageView?.translatesAutoresizingMaskIntoConstraints = false
         profileImageView?.contentMode = .scaleAspectFill
@@ -40,16 +44,17 @@ class ChatUserCell : UITableViewCell {
         profileImageView?.layer.cornerRadius = 25
         profileImageView?.layer.masksToBounds = true
     }
-//    func configureProfileNameLabel() {
-//        profileNameLabel = UILabel()
-//        addSubview(profileNameLabel!)
-//        profileNameLabel?.translatesAutoresizingMaskIntoConstraints = false
-//        profileNameLabel?.textColor = .white
-//        
-//        profileNameLabel?.leadingAnchor.constraint(equalTo: (profileImageView?.trailingAnchor)!, constant: 10).isActive = true
-//        profileNameLabel?.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-//    }
-    func configureSeparatorLine() {
+    private func configureTimeStampLabel() {
+        timeStampLabel = UILabel()
+        addSubview(timeStampLabel!)
+        timeStampLabel?.textColor = .white
+        timeStampLabel?.font = UIFont.systemFont(ofSize: 12)
+        timeStampLabel?.translatesAutoresizingMaskIntoConstraints = false
+        
+        timeStampLabel?.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        timeStampLabel?.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
+    }
+    private func configureSeparatorLine() {
         let separatorLine = UIView()
         addSubview(separatorLine)
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
@@ -59,6 +64,9 @@ class ChatUserCell : UITableViewCell {
         separatorLine.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         separatorLine.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         separatorLine.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -0.5).isActive = true
+    }
+    override func prepareForReuse() {
+        profileImageView?.image = nil
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -62,6 +62,7 @@ class NewChatController: UIViewController, UITableViewDelegate, UITableViewDataS
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let chatUser = chatUsers[indexPath.row]
         dismiss(animated: true) { 
             self.chatsController?.showChatLogControllerForUser(chatUser: chatUser)

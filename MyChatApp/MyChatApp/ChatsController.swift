@@ -33,6 +33,7 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
         }
         let notificationName = Notification.Name("logout")
         NotificationCenter.default.addObserver(self, selector: #selector(handleLogout), name: notificationName, object: nil)
+        profileController.reload()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -45,6 +46,9 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
                 let chat = Chats()
                 chat.setValuesForKeys(dictionary)
                 self.chats.append(chat)
+                self.chats = self.chats.sorted(by: { (t1, t2) -> Bool in
+                    return (t1.timeStamp?.intValue)! > (t2.timeStamp?.intValue)!
+                })
                 DispatchQueue.main.async {
                     self.chatsTableView.reloadData()
                 }
@@ -108,6 +112,7 @@ class ChatsController: UIViewController, UIPopoverPresentationControllerDelegate
         chatsTableView.delegate = self
         chatsTableView.dataSource = self
         chatsTableView.separatorStyle = .none
+        chatsTableView.contentInset = UIEdgeInsetsMake(0, 0, 100, 0)
         chatsTableView.register(ChatUserCell.self, forCellReuseIdentifier: "cellId")
        
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[chatsTableView]|", options: .init(rawValue: 0), metrics: nil, views: ["chatsTableView":chatsTableView]))
@@ -159,6 +164,13 @@ extension ChatsController: UITableViewDataSource, UITableViewDelegate {
         let chat = chats[indexPath.row]
         cell.detailTextLabel?.text = chat.text
         
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        let date = Date(timeIntervalSinceReferenceDate: TimeInterval(chat.timeStamp!))
+        cell.timeStampLabel?.text = dateFormatter.string(from: date)
+        
+      
+        
         let ref = Database.database().reference().child("users").child(chat.toId!)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -173,6 +185,6 @@ extension ChatsController: UITableViewDataSource, UITableViewDelegate {
         return 70.0
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

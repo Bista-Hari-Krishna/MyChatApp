@@ -14,13 +14,14 @@ class ProfileController: UITableViewController {
     var profileDetails = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        loggedInUser = UserDefaultsManager.shared.loggedInUser
-        profileDetails = [loggedInUser?.name ?? "", loggedInUser?.email ?? "", "logout"]
-//        if let user = loggedInUser {
-//            profileDetails = [user.name,user.email,"logout"]
-//        }
+        reload()
         tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         tableView.isScrollEnabled = false
+    }
+    func reload() {
+        loggedInUser = UserDefaultsManager.shared.loggedInUser
+        profileDetails = [loggedInUser?.name ?? "", loggedInUser?.email ?? "", "logout"]
+        tableView.reloadData()
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return profileDetails.count

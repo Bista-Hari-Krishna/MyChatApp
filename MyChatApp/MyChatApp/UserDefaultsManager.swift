@@ -26,6 +26,7 @@ class UserDefaultsManager: NSObject {
         To use it, simply call saveLoggedInUser(user: ChatUser).
      */
     func saveLoggedInUser(user: ChatUser) {
+        deleteLoggedInUser()
         let encodedUser = NSKeyedArchiver.archivedData(withRootObject: user)
         userDefaults.set(encodedUser, forKey: kLoggedInUser)
     }
